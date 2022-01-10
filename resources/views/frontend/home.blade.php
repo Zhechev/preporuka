@@ -1,4 +1,11 @@
-@extends('frontend.app')
+@extends('frontend.common.app')
+
+@section('head')
+<link href="{{ asset('css/stylesheet.css') }}" rel="stylesheet">
+<link href="{{ asset('css/mmenu.css') }}" rel="stylesheet">
+<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
 
   <div class="search_container_block home_main_search_part main_search_block" data-background-image="{{ asset('images/city_search_background.jpg') }}" style="background-image: url("{{ asset('images/city_search_background.jpg') }}");"/>
@@ -45,7 +52,7 @@
 			  <h3>Разгледай категориите</h3>
               <ul class="main_popular_categories_list">
                 @foreach ($categories as $category)
-                  <li> <a href="{{ route('category.show', ['category' => $category]) }}">
+                  <li> <a href="{{ route('categories.show', ['category' => $category]) }}">
                       <div class="utf_box"> <i class="{{ $category->icon }}" aria-hidden="true"></i>
                         <p>{{ $category->category_bg_name }}</p>
                       </div>
@@ -70,7 +77,7 @@
       <div class="col-md-12">
         <div class="container_categories_box margin-top-5 margin-bottom-30">
             @foreach ($categories as $category)
-            <a href="{{ route('category.show', ['category' => $category]) }}" class="utf_category_small_box_part"> <i class="{{ $category->icon }}"></i>
+            <a href="{{ route('categories.show', ['category' => $category]) }}" class="utf_category_small_box_part"> <i class="{{ $category->icon }}"></i>
                 <h4>{{ $category->category_bg_name }}</h4>
                 <span>10</span>
               </a>
@@ -258,4 +265,18 @@
         </div>
       </div>
 	</section>
+@endsection
+@section('scripts')
+<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+<script src="{{ asset('js/chosen.min.js') }}"></script>
+<script src="{{ asset('js/slick.min.js') }}"></script>
+<script src="{{ asset('js/rangeslider.min.js') }}"></script>
+<script src="{{ asset('js/magnific-popup.min.js') }}"></script>
+<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
+<script src="{{ asset('js/mmenu.js') }}"></script>
+<script src="{{ asset('js/tooltips.min.js') }}"></script>
+<script src="{{ asset('js/color_switcher.js') }}"></script>
+<script src="{{ asset('js/jquery_custom.js') }}"></script>
+<script src="{{ asset('js/typed.js') }}"></script>
 @endsection

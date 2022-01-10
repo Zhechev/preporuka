@@ -1,4 +1,11 @@
-@extends('frontend.app')
+@extends('frontend.common.app')
+
+@section('head')
+    <link href="{{ asset('css/stylesheet.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/mmenu.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
   <div class="clearfix"></div>
   <div id="titlebar" class="gradient">
@@ -109,14 +116,14 @@
         <div class="row">
             @foreach ($category->venues as $venue)
               <div class="col-lg-12 col-md-12">
-                <div class="utf_listing_item-container list-layout"> <a href="{% url 'show-venue' category=category pk=venue.id page_num=1%}"  class="utf_listing_item">
+                <div class="utf_listing_item-container list-layout"> <a href="{{ route('venues.show', ['venue' => $venue]) }}"  class="utf_listing_item">
                   <div class="utf_listing_item-image">
-                      <img src="{% static 'core/images/utf_listing_item-01.jpg' %}" alt="">
+                      <img src="{{ asset('images/' . $venue->cover_image) }}" alt="">
                       <span class="like-icon"></span>
                       <span class="tag"><i class="im im-icon-Hotel"></i> {{ $category->bg_name }}</span>
                       <div class="utf_listing_prige_block utf_half_list">
-                        <span class="utf_meta_listing_price"><i class="fa fa-tag"></i> $25 - $45</span>
-                        <span class="utp_approve_item"><i class="utf_approve_listing"></i></span>
+                        {{-- <span class="utf_meta_listing_price"><i class="fa fa-tag"></i> $25 - $45</span> --}}
+                        {{-- <span class="utp_approve_item"><i class="utf_approve_listing"></i></span> --}}
                       </div>
                   </div>
                   <span class="utf_open_now">Open Now</span>
@@ -126,7 +133,7 @@
                       <span><i class="sl sl-icon-location"></i> {{ $venue->address }}</span>
                       <span><i class="sl sl-icon-phone"></i> {{ $venue->phone }}</span>
                       <div class="utf_star_rating_section" data-rating="">
-                        <div class="utf_counter_star_rating">()</div>
+                        <div class="utf_counter_star_rating">({{ $venue->rating }})</div>
                       </div>
                       <p>{{ $venue->content }}</p>
                     </div>
@@ -199,7 +206,7 @@
             <h3><i class="sl sl-icon-folder-alt"></i> Категории</h3>
             <ul class="utf_listing_detail_sidebar">
 			  @foreach ($categories as $category)
-			  	<li><i class="fa fa-angle-double-right"></i> <a href="{{ route('category.show', ['category' => $category]) }}">{{ $category->category_bg_name }}</a></li>
+			  	<li><i class="fa fa-angle-double-right"></i> <a href="{{ route('categories.show', ['category' => $category]) }}">{{ $category->category_bg_name }}</a></li>
 			  @endforeach
             </ul>
           </div>
@@ -207,32 +214,18 @@
       </div>
     </div>
   </div>
+@endsection
+@section('scripts')
 
-  <section class="utf_cta_area_item utf_cta_area2_block">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="utf_subscribe_block clearfix">
-                    <div class="col-md-8 col-sm-7">
-                        <div class="section-heading">
-                            <h2 class="utf_sec_title_item utf_sec_title_item2">Subscribe to Newsletter!</h2>
-                            <p class="utf_sec_meta">
-                                Subscribe to get latest updates and information.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-5">
-                        <div class="contact-form-action">
-                            <form method="post">
-                                <span class="la la-envelope-o"></span>
-                                <input class="form-control" type="email" placeholder="Enter your email" required="">
-                                <button class="utf_theme_btn" type="submit">Subscribe</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </div>
-	</section>
+<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+<script src="{{ asset('js/chosen.min.js') }}"></script>
+<script src="{{ asset('js/slick.min.js') }}"></script>
+<script src="{{ asset('js/rangeslider.min.js') }}"></script>
+<script src="{{ asset('js/magnific-popup.min.js') }}"></script>
+<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('js/mmenu.js') }}"></script>
+<script src="{{ asset('js/tooltips.min.js') }}"></script>
+<script src="{{ asset('js/color_switcher.js') }}"></script>
+<script src="{{ asset('js/jquery_custom.js') }}"></script>
+
 @endsection

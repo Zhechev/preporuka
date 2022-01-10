@@ -14,6 +14,7 @@ class CreateVenueFeaturesTable extends Migration
     public function up()
     {
         Schema::create('venue_feature', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('venue_id');
             $table->unsignedBigInteger('feature_id');
             $table->foreign('venue_id')

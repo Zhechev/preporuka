@@ -98,22 +98,7 @@
                 </div -->
                 <div class="utf_right_side">
                   <div class="header_widget">
-                    <nav id="navigation" class="style_one">
-                      <ul id="responsive">
-                          <li><a href="#"><i class="sl sl-icon-user"></i>Добави обект</a>
-                              <ul>
-                                <li><a href="{% url 'add-venue' category='restaurants' %}">Ресторанти</a></li>
-                                <li><a href="{% url 'add-venue' category='sportfitness' %}">Спортни и фитнес</a></li>
-                                <li><a href="{% url 'add-venue' category='carservices' %}">Автосервизи</a></li>
-                                <li><a href="{% url 'add-venue' category='beautysalons' %}">Салони за красота</a></li>
-                                <li><a href="{% url 'add-venue' category='fastfood' %}">Бързо хранене</a></li>
-                                <li><a href="{% url 'add-venue' category='carwashes' %}">Автомивки</a></li>
-                                <li><a href="{% url 'add-venue' category='fun' %}">Забавление</a></li>
-                                <li><a href="{% url 'add-venue' category='other' %}">Други</a></li>
-                              </ul>
-                          </li>
-                      </ul>
-                    </nav>
+                      <a href="{{ route('venues.create') }}" class="button border with-icon"><i class="sl sl-icon-user"></i>Добави обект</a></li>
                     @auth
                       <a href="{% url 'redirect-user-profile' %}" class="button border with-icon"><i class="sl sl-icon-user"></i> Профил</a>
                       <a href="{{ route('logout') }}" class="button border with-icon" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="sl sl-icon-user"></i> Излез</a>

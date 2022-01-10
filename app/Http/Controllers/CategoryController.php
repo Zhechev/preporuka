@@ -16,9 +16,4 @@ class CategoryController extends Controller
             'categories' => $categories
         ]);
     }
-
-    public function create()
-    {
-        return view('frontend.categories.create');
-    }
 }
