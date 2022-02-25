@@ -10,51 +10,56 @@ use App\Models\City;
 use App\Models\Venue;
 use App\Models\VenueImage;
 use App\Services\ImageService;
-use App\Services\ImageServices;
 
 class VenueController extends Controller
 {
-    public function create()
+    public function create(Category $category)
     {
-        $booleanFeatures = Feature::where('type', '=', 'bool')->get();
-        $textFeatures = Feature::where('type', '=', 'text')->get();
         $categories = Category::all();
         $cities = City::all();
+        $features = $category->features;
 
         return view('frontend.venues.create', [
-            'booleanFeatures' => $booleanFeatures,
-            'textFeatures' => $textFeatures,
+            'category' => $category,
             'categories' => $categories,
-            'cities' => $cities
+            'cities' => $cities,
+            'features' => $features
         ]);
     }
 
     public function store(StoreVenueRequest $request)
     {
+        $addData = ['user_id' => auth()->id()];
+
         if ($request->file('coverImage')) {
-            $imagePath = (new ImageService())->upload($request->file('coverImage'));
+            $imagePath = ImageService::upload($request->file('coverImage'));
             $addData['cover_image'] = $imagePath;
         }
-
-        $addData = ['user_id' => auth()->id()];
 
         $venue = Venue::create($request->validated() + $addData);
         $venue->features()->attach($request->all()['features_bool']);
 
         if ($request->file('images')) {
             foreach ($request->file('images') as $file) {
-                $imagePath = (new ImageService())->upload($file);
+                $imagePath = ImageService::upload($file);
                 $image = new VenueImage();
                 $image->path = $imagePath;
                 $venue->images()->save($image);
             }
         }
+
+        return redirect()->route('venues.show', [
+            'venue' => $venue
+        ]);
     }
 
     public function show(Venue $venue)
     {
+        $categories = Category::all();
+
         return view('frontend.venues.show', [
-            'venue' => $venue
+            'venue' => $venue,
+            'categories' => $categories
         ]);
     }
 }

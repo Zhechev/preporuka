@@ -19,15 +19,17 @@ class CreateVenuesTable extends Migration
             $table->smallInteger('city_id');
             $table->integer('category_id');
             $table->string('title');
+            $table->text('content_bg')->nullable();
+            $table->text('content_en')->nullable();
             $table->string('address');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->string('email');
-            $table->string('website');
-            $table->string('facebook');
-            $table->string('instagram');
-            $table->text('content');
-            $table->decimal('rating');
-            $table->boolean('is_approved');
+            $table->string('website')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('instagram')->nullable();
+            $table->decimal('rating')->nullable();
+            $table->string('cover_image')->nullable();
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

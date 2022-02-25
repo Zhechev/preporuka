@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCoverImageToVenuesTable extends Migration
+class AddLngToVenuesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddCoverImageToVenuesTable extends Migration
     public function up()
     {
         Schema::table('venues', function (Blueprint $table) {
-            $table->string('cover_image')->nullable();
+            $table->string('lng')->default('null');
         });
     }
 
@@ -26,7 +26,7 @@ class AddCoverImageToVenuesTable extends Migration
     public function down()
     {
         Schema::table('venues', function (Blueprint $table) {
-            $table->dropColumn('cover_image');
+            $table->dropColumn('lng');
         });
     }
 }

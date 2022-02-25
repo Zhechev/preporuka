@@ -4,6 +4,7 @@
     <link href="{{ asset('css/stylesheet.css') }}" rel="stylesheet">
     <link href="{{ asset('css/mmenu.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/leaflet.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -13,159 +14,87 @@
   <div class="clearfix"></div>
   <div id="utf_listing_gallery_part" class="utf_listing_section">
     <div class="utf_listing_slider utf_gallery_container margin-bottom-0">
+        <a href="{{ asset('images/' . $venue->cover_image) }}" data-background-image="{{ asset('images/' . $venue->cover_image) }}" class="item utf_gallery"></a>
         @foreach ($venue->images as $image)
             <a href="{{ asset('images/' . $image->path) }}" data-background-image="{{ asset('images/' . $image->path) }}" class="item utf_gallery"></a>
         @endforeach
 	</div>
   </div>
 
+  <input type="hidden" value="{{ $venue->lat }}" id="lat">
+  <input type="hidden" value="{{ $venue->lng }}" id="lng">
+
   <div class="container">
     <div class="row utf_sticky_main_wrapper">
       <div class="col-lg-8 col-md-8">
         <div id="titlebar" class="utf_listing_titlebar">
           <div class="utf_listing_titlebar_title">
-           <h2>{{ $venue->title }} <span class="listing-tag">{{ $venue->category[app()->getLocale().'_name'] }}</span></h2>
+           <h2>{{ $venue->title }} <span class="listing-tag">{{ $venue->category['name_' . app()->getLocale()] }}</span></h2>
             <span> <a href="#utf_listing_location" class="listing-address"> <i class="sl sl-icon-location"></i> {{ $venue->address }} </a> </span>
 			<span class="call_now"><i class="sl sl-icon-phone"></i> (415) 796-3633</span>
             <div class="utf_star_rating_section" data-rating="4.5">
-              <div class="utf_counter_star_rating">(4.5) / (14 Reviews)</div>
+              <div class="utf_counter_star_rating">(4.5) / (14 {{ __('text.reviews') }})</div>
             </div>
             <ul class="listing_item_social">
-              <li><a href="#"><i class="fa fa-bookmark"></i> Bookmark</a></li>
-			  <li><a href="#"><i class="fa fa-star"></i> Add Review</a></li>
-              <li><a href="#"><i class="fa fa-flag"></i> Featured</a></li>
-              <li><a href="#"><i class="fa fa-share"></i> Share</a></li>
-			  <li><a href="#" class="now_open">Open Now</a></li>
+              <li><a href="#"><i class="fa fa-bookmark"></i> {{ __('text.bookmark') }}</a></li>
+			  <li><a href="#"><i class="fa fa-star"></i> {{ __('text.add_review') }}</a></li>
+              <li><a href="#"><i class="fa fa-share"></i> {{ __('text.share') }}</a></li>
+			  <li><a href="#" class="now_open">{{ __('text.open') }}</a></li>
             </ul>
           </div>
         </div>
         <div id="utf_listing_overview" class="utf_listing_section">
-          <h3 class="utf_listing_headline_part margin-top-30 margin-bottom-30">Listing Description</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat. Curabitur convallis fringilla diam sed aliquam.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat. Curabitur convallis fringilla diam sed aliquam. Sed tempor iaculis massa faucibus feugiat. In fermentum facilisis massa, a consequat purus viverra.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat. Curabitur convallis fringilla diam sed aliquam.</p>
+          <h3 class="utf_listing_headline_part margin-top-30 margin-bottom-30">{{ __('text.description') }}</h3>
+            <p>{{ $venue['content_' . app()->getLocale()] }}</p>
 		  <div id="utf_listing_tags" class="utf_listing_section listing_tags_section margin-bottom-10 margin-top-0">
-		    <a href="#"><i class="sl sl-icon-phone" aria-hidden="true"></i> +(01) 1123-254-456</a>
-			<a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i> info@example.com</a>
-			<a href="#"><i class="sl sl-icon-globe" aria-hidden="true"></i> www.example.com</a>
+		    <a href="#"><i class="sl sl-icon-phone" aria-hidden="true"></i> {{ $venue->phone }} </a>
+			<a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ $venue->email }}</a>
+			<a href="#"><i class="sl sl-icon-globe" aria-hidden="true"></i> {{ $venue->website }}</a>
           </div>
 		  <div class="social-contact">
-			<a href="#" class="facebook-link"><i class="fa fa-facebook"></i> Facebook</a>
-			<a href="#" class="twitter-link"><i class="fa fa-twitter"></i> Twitter</a>
-			<a href="#" class="instagram-link"><i class="fa fa-instagram"></i> Instagram</a>
-			<a href="#" class="linkedin-link"><i class="fa fa-linkedin"></i> Linkedin</a>
-			<a href="#" class="youtube-link"><i class="fa fa-youtube-play"></i> Youtube</a>
+			<a href="{{ $venue->facebook }}" class="facebook-link"><i class="fa fa-facebook"></i> Facebook</a>
+			<a href="{{ $venue->instagram }}" class="instagram-link"><i class="fa fa-instagram"></i> Instagram</a>
 		  </div>
         </div>
-
-		<div id="utf_listing_tags" class="utf_listing_section listing_tags_section">
-          <h3 class="utf_listing_headline_part margin-top-30 margin-bottom-40">Listings Tags</h3>
-			<a href="#"><i class="fa fa-tag" aria-hidden="true"></i> Food</a>
-			<a href="#"><i class="fa fa-tag" aria-hidden="true"></i> Fruits</a>
-			<a href="#"><i class="fa fa-tag" aria-hidden="true"></i> Lunch</a>
-			<a href="#"><i class="fa fa-tag" aria-hidden="true"></i> Menu</a>
-			<a href="#"><i class="fa fa-tag" aria-hidden="true"></i> Parking</a>
-			<a href="#"><i class="fa fa-tag" aria-hidden="true"></i> Restaurant</a>
-        </div>
-
-        <div class="utf_listing_section">
-          <h3 class="utf_listing_headline_part margin-top-50 margin-bottom-40">Pricing</h3>
-          <div class="show-more">
-            <div class="utf_pricing_list_section">
-              <h4>Menu Listing</h4>
-              <ul>
-                <li>
-                  <h5>Burger <sub class="ppl-offer label-light-success">20% Off</sub></h5>
-                  <p>Beef, Salad, Mayonnaise, Spicey Relish, Cheese</p>
-                  <span>$120</span>
-				</li>
-                <li>
-                  <h5>Goat Cheese Mousse</h5>
-                  <p>Caramelized Fig, Plums, Macadamia Nuts and Sorrel</p>
-                  <span>$150</span>
-				</li>
-                <li>
-                  <h5>Pizza <sub class="ppl-offer label-light-success">10% Off</sub></h5>
-				  <p>Cheddar Cheese, Lettuce, Tomato, Onion, Dill Pickles</p>
-                  <span>$130</span>
-				</li>
-				<li>
-                  <h5>French Crostini <sub class="ppl-offer label-light-success">10% Off</sub></h5>
-				  <p>Breakfast Sandwich on a Roll with 2 Eggs</p>
-                  <span>$130</span>
-				</li>
-				<li>
-                  <h5>Caramelised Rum Punch <sub class="ppl-offer label-light-success">15% Off</sub></h5>
-				  <p>Caramelised Mount Gay Eclipse with a Picked Watermelon</p>
-                  <span>$120</span>
-				</li>
-                <li>
-                  <h5><strong>Tatel Price</strong></h5>
-                  <span><strong>$650</strong></span>
-				</li>
-              </ul>
-            </div>
-          </div>
-          <a href="#" class="show-more-button" data-more-title="Show More" data-less-title="Show Less"><i class="fa fa-angle-double-down"></i></a>
-		</div>
 
 		<div id="utf_listing_amenities" class="utf_listing_section">
-          <h3 class="utf_listing_headline_part margin-top-50 margin-bottom-40">Features</h3>
+          <h3 class="utf_listing_headline_part margin-top-50 margin-bottom-40">{{ __('text.features') }}</h3>
           <ul class="utf_listing_features checkboxes margin-top-0">
-            <li>Air Conditioned</li>
-            <li>Swimming Pool</li>
-            <li>Room Service</li>
-            <li>Luxury Bedding</li>
-            <li>Free Wifi</li>
-            <li>Bath Towel</li>
-			<li>Wireless Internet</li>
-            <li>Free Parking on premises</li>
-            <li>Free Parking on Street</li>
-            <li>Live Music</li>
-            <li>Indoor Pool</li>
+            @foreach ($venue->category->features as $feature)
+                @if(in_array($feature->id, $venue->features->pluck('id')->toArray()))
+                    <li class="feature-yes">{{ $feature['name_' . app()->getLocale()] }}</li>
+                @else
+                    <li class="feature-no">{{ $feature['name_' . app()->getLocale()] }}</li>
+                @endif
+            @endforeach
           </ul>
         </div>
-
-		<div id="utf_listing_faq" class="utf_listing_section">
-          <h3 class="utf_listing_headline_part margin-top-50 margin-bottom-40">Listing FAQ's</h3>
-          <div class="style-2">
-			<div class="accordion">
-			  <h3><span class="ui-accordion-header-icon ui-icon ui-accordion-icon"></span><i class="sl sl-icon-plus"></i> (1) How to Open an Account?</h3>
-			  <div>
-				<p>Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry.</p>
-			  </div>
-			  <h3><span class="ui-accordion-header-icon ui-icon ui-accordion-icon"></span><i class="sl sl-icon-plus"></i> (2) How to Add Listing?</h3>
-			  <div>
-				<p>Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry.</p>
-			  </div>
-			  <h3><span class="ui-accordion-header-icon ui-icon ui-accordion-icon"></span><i class="sl sl-icon-plus"></i> (3) What is Featured Listing?</h3>
-			  <div>
-				<p>Lorem Ipsum is simply dummy text of the printing and type setting industry. Lorem Ipsum is simply dummy text of the printing and type setting industry.</p>
-			  </div>
-			</div>
-		  </div>
-        </div>
-
+        @if($venue->lat != "null" && $venue->lng != "null" && !empty($venue->lat) && !empty($venue->lng))
         <div id="utf_listing_location" class="utf_listing_section">
-          <h3 class="utf_listing_headline_part margin-top-60 margin-bottom-40">Location</h3>
-          <div id="utf_single_listing_map_block">
-            <div id="utf_single_listingmap" data-latitude="36.778259" data-longitude="-119.417931" data-map-icon="im im-icon-Hamburger"></div>
-            <a href="#" id="utf_street_view_btn">Street View</a>
-		  </div>
-        </div>
+            <h3 class="utf_listing_headline_part margin-top-60 margin-bottom-40">{{ __('text.location') }}</h3>
+            <div id="utf_single_listing_map_block">
+              <div id="utf_listing_location" class="col-md-12 utf_listing_section map">
+                  <div id="map" style="height: 500px;">
+
+                  </div>
+              </div>
+            </div>
+          </div>
+        @endif
+
         <div id="utf_listing_reviews" class="utf_listing_section">
-          <h3 class="utf_listing_headline_part margin-top-75 margin-bottom-20">Reviews <span>(08)</span></h3>
+          <h3 class="utf_listing_headline_part margin-top-75 margin-bottom-20">{{ __('text.Reviews') }} <span>(08)</span></h3>
           <div class="clearfix"></div>
 		  <div class="reviews-container">
 			<div class="row">
 				<div class="col-lg-3">
 					<div id="review_summary">
 						<strong>4.5</strong>
-						<em>Superb Reviews</em>
+						{{-- <em>Superb Reviews</em> --}}
 						<small>Out of 15 Reviews</small>
 					</div>
 				</div>
-				<div class="col-lg-9">
+				{{-- <div class="col-lg-9">
 					<div class="row">
 						<div class="col-lg-2 review_progres_title"><small><strong>Quality</strong></small></div>
 						<div class="col-lg-9">
@@ -211,69 +140,29 @@
 						</div>
 						<div class="col-lg-1 review_progres_title"><small><strong>05</strong></small></div>
 					</div>
-				</div>
+				</div> --}}
 			</div>
 		  </div>
           <div class="comments utf_listing_reviews">
             <ul>
-              <li>
-                <div class="avatar"><img src="images/client-avatar1.jpg" alt="" /></div>
-                <div class="utf_comment_content">
-                  <div class="utf_arrow_comment"></div>
-                  <div class="utf_star_rating_section" data-rating="5"></div>
-				  <a href="#" class="rate-review">Helpful Review <i class="fa fa-thumbs-up"></i></a>
-                  <div class="utf_by_comment">Francis Burton<span class="date"><i class="fa fa-clock-o"></i> Jan 05, 2021 - 8:52 am</span> </div>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat.</p>
-				</div>
-              </li>
-              <li>
-                <div class="avatar"><img src="images/client-avatar2.jpg" alt="" /> </div>
-                <div class="utf_comment_content">
-                  <div class="utf_arrow_comment"></div>
-                  <div class="utf_star_rating_section" data-rating="4"></div>
-				  <a href="#" class="rate-review">Helpful Review <i class="fa fa-thumbs-up"></i></a>
-                  <div class="utf_by_comment">Francis Burton<span class="date"><i class="fa fa-clock-o"></i> Jan 05, 2021 - 8:52 am</span> </div>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat.</p>
-				</div>
-              </li>
-			  <li>
-                <div class="avatar"><img src="images/client-avatar3.jpg" alt="" /> </div>
-                <div class="utf_comment_content">
-                  <div class="utf_arrow_comment"></div>
-                  <div class="utf_star_rating_section" data-rating="4"></div>
-                  <div class="utf_by_comment">Francis Burton<span class="date"><i class="fa fa-clock-o"></i> Jan 05, 2021 - 8:52 am</span> </div>
-				  <a href="#" class="rate-review">Helpful Review <i class="fa fa-thumbs-up"></i></a>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat.</p>
-				</div>
-              </li>
-              <li>
-                <div class="avatar"><img src="images/client-avatar1.jpg" alt="" /></div>
-                <div class="utf_comment_content">
-                  <div class="utf_arrow_comment"></div>
-                  <div class="utf_star_rating_section" data-rating="4.5"></div>
-                  <div class="utf_by_comment">Francis Burton<span class="date"><i class="fa fa-clock-o"></i> Jan 05, 2021 - 8:52 am</span> </div>
-				  <a href="#" class="rate-review">Helpful Review <i class="fa fa-thumbs-up"></i></a>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat.</p>
-                  <div class="review-images utf_gallery_container">
-				    <a href="images/review-image-01.jpg" class="utf_gallery"><img src="images/review-image-01.jpg" alt=""></a>
-					<a href="images/review-image-02.jpg" class="utf_gallery"><img src="images/review-image-02.jpg" alt=""></a>
-					<a href="images/review-image-03.jpg" class="utf_gallery"><img src="images/review-image-03.jpg" alt=""></a>
-					<a href="images/review-image-01.jpg" class="utf_gallery"><img src="images/review-image-01.jpg" alt=""></a>
-					<a href="images/review-image-02.jpg" class="utf_gallery"><img src="images/review-image-02.jpg" alt=""></a>
-					<a href="images/review-image-03.jpg" class="utf_gallery"><img src="images/review-image-03.jpg" alt=""></a>
-				  </div>
-				</div>
-              </li>
-			  <li>
-                <div class="avatar"><img src="images/client-avatar3.jpg" alt="" /> </div>
-                <div class="utf_comment_content">
-                  <div class="utf_arrow_comment"></div>
-                  <div class="utf_star_rating_section" data-rating="4"></div>
-                  <div class="utf_by_comment">Francis Burton<span class="date"><i class="fa fa-clock-o"></i> Jan 05, 2021 - 8:52 am</span> </div>
-				  <a href="#" class="rate-review">Helpful Review <i class="fa fa-thumbs-up"></i></a>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in pulvinar neque. Nulla finibus lobortis pulvinar. Donec a consectetur nulla. Nulla posuere sapien vitae lectus suscipit, et pulvinar nisi tincidunt. Aliquam erat volutpat.</p>
-				</div>
-              </li>
+                @foreach ($venue->reviews as $review)
+                  <li>
+                    <div class="avatar"><img src="images/client-avatar1.jpg" alt="" /></div>
+                    <div class="utf_comment_content">
+                      <div class="utf_arrow_comment"></div>
+                      <div class="utf_star_rating_section" data-rating="4.5"></div>
+                      <div class="utf_by_comment">Francis Burton<span class="date"><i class="fa fa-clock-o"></i> Jan 05, 2021 - 8:52 am</span> </div>
+                      <a href="#" class="rate-review">Helpful Review <i class="fa fa-thumbs-up"></i></a>
+                      <p>{{ $review->content }}</p>
+                      <div class="review-images utf_gallery_container">
+                          @foreach ($review->images as $image)
+                          <a href="{{ asset('images/' . $image->path) }}" class="utf_gallery"><img src="{{ asset('images/' . $image->path) }}" alt=""></a>
+                          @endforeach
+                      </div>
+                    </div>
+                  </li>
+                @endforeach
+
             </ul>
           </div>
           <div class="clearfix"></div>
@@ -295,55 +184,42 @@
           <div class="clearfix"></div>
         </div>
         <div id="utf_add_review" class="utf_add_review-box">
-          <h3 class="utf_listing_headline_part margin-bottom-20">Add Your Review</h3>
-          <span class="utf_leave_rating_title">Your email address will not be published.</span>
-          <div class="row">
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <div class="clearfix"></div>
-              <div class="utf_leave_rating margin-bottom-30">
-                <input type="radio" name="rating" id="rating-1" value="1"/>
-                <label for="rating-1" class="fa fa-star"></label>
-                <input type="radio" name="rating" id="rating-2" value="2"/>
-                <label for="rating-2" class="fa fa-star"></label>
-                <input type="radio" name="rating" id="rating-3" value="3"/>
-                <label for="rating-3" class="fa fa-star"></label>
-                <input type="radio" name="rating" id="rating-4" value="4"/>
-                <label for="rating-4" class="fa fa-star"></label>
-                <input type="radio" name="rating" id="rating-5" value="5"/>
-                <label for="rating-5" class="fa fa-star"></label>
-              </div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <div class="add-review-photos margin-bottom-30">
-                <div class="photoUpload"> <span>Upload Photo <i class="sl sl-icon-arrow-up-circle"></i></span>
-                  <input type="file" class="upload" />
+          <h3 class="utf_listing_headline_part margin-bottom-20">{{ __('text.add_review') }}</h3>
+          <form id="addReview" class="utf_add_comment" enctype="multipart/form-data" action="{{ route('reviews.store') }}">
+            @csrf
+            <input type="hidden" value="{{ $venue->id }}" name="venue_id">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="clearfix"></div>
+                  <div class="utf_leave_rating margin-bottom-30">
+                    <input type="radio" name="rating" id="rating-1" value="5"/>
+                    <label for="rating-1" class="fa fa-star"></label>
+                    <input type="radio" name="rating" id="rating-2" value="4"/>
+                    <label for="rating-2" class="fa fa-star"></label>
+                    <input type="radio" name="rating" id="rating-3" value="3"/>
+                    <label for="rating-3" class="fa fa-star"></label>
+                    <input type="radio" name="rating" id="rating-4" value="2"/>
+                    <label for="rating-4" class="fa fa-star"></label>
+                    <input type="radio" name="rating" id="rating-5" value="1"/>
+                    <label for="rating-5" class="fa fa-star"></label>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="add-review-photos margin-bottom-30">
+                    <div class="photoUpload"> <span>{{ __('text.upload_photos') }} <i class="sl sl-icon-arrow-up-circle"></i></span>
+                      <input type="file" name="images[]" multiple class="upload" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <form id="utf_add_comment" class="utf_add_comment">
             <fieldset>
-              <div class="row">
-                <div class="col-md-4">
-                  <label>Name:</label>
-                  <input type="text" placeholder="Name" value=""/>
-                </div>
-                <div class="col-md-4">
-                  <label>Email:</label>
-                  <input type="text" placeholder="Email" value=""/>
-                </div>
-                <div class="col-md-4">
-                  <label>Subject:</label>
-                  <input type="text" placeholder="Subject" value=""/>
-                </div>
-              </div>
               <div>
-                <label>Review:</label>
-                <textarea cols="40" placeholder="Your Message..." rows="3"></textarea>
+                <label>{{ __('text.content') }}:</label>
+                <textarea cols="40" placeholder="" rows="3" name="content"></textarea>
               </div>
             </fieldset>
-            <button class="button">Submit Review</button>
+            <button class="button" type="submit">Submit Review</button>
             <div class="clearfix"></div>
           </form>
         </div>
@@ -352,124 +228,6 @@
       <!-- Sidebar -->
       <div class="col-lg-4 col-md-4 margin-top-75 sidebar-search">
         <div class="verified-badge with-tip margin-bottom-30" data-tip-content="Listing has been verified and belongs business owner or manager."> <i class="sl sl-icon-check"></i> Now Available</div>
-        <div class="utf_box_widget booking_widget_box">
-          <h3><i class="fa fa-calendar"></i> Booking
-			<div class="price">
-				<span>185$<small>person</small></span>
-			</div>
-		  </h3>
-          <div class="row with-forms margin-top-0">
-            <div class="col-lg-12 col-md-12 select_date_box">
-              <input type="text" id="date-picker" placeholder="Select Date" readonly="readonly">
-			  <i class="fa fa-calendar"></i>
-            </div>
-  		    <div class="col-lg-12">
-				<div class="panel-dropdown time-slots-dropdown">
-					<a href="#">Choose Time Slot...</a>
-					<div class="panel-dropdown-content padding-reset">
-						<div class="panel-dropdown-scrollable">
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-1">
-								<label for="time-slot-1">
-									<strong><span>1</span> : 8:00 AM - 8:30 AM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-2">
-								<label for="time-slot-2">
-									<strong><span>2</span> : 8:30 AM - 9:00 AM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-3">
-								<label for="time-slot-3">
-									<strong><span>3</span> : 9:00 AM - 9:30 AM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-4">
-								<label for="time-slot-4">
-									<strong><span>4</span> : 9:30 AM - 10:00 AM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-5">
-								<label for="time-slot-5">
-									<strong><span>5</span> : 10:00 AM - 10:30 AM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-6">
-								<label for="time-slot-6">
-									<strong><span>6</span> : 13:00 PM - 13:30 PM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-7">
-								<label for="time-slot-7">
-									<strong><span>7</span> : 13:30 PM - 14:00 PM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-8">
-								<label for="time-slot-8">
-									<strong><span>8</span> : 14:00 PM - 14:30 PM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-9">
-								<label for="time-slot-9">
-									<strong><span>9</span> : 15:00 PM - 15:30 PM</strong>
-								</label>
-							</div>
-
-							<div class="time-slot">
-								<input type="radio" name="time-slot" id="time-slot-10">
-								<label for="time-slot-10">
-									<strong><span>10</span> : 16:00 PM - 16:30 PM</strong>
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-12">
-				<div class="panel-dropdown">
-					<a href="#">Guests <span class="qtyTotal" name="qtyTotal">1</span></a>
-					<div class="panel-dropdown-content">
-						<div class="qtyButtons">
-							<div class="qtyTitle">Adults</div>
-							<input type="text" name="qtyInput" value="1">
-						</div>
-						<div class="qtyButtons">
-							<div class="qtyTitle">Childrens</div>
-							<input type="text" name="qtyInput" value="1">
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="with-forms margin-top-0">
-				<div class="col-lg-12 col-md-12">
-					<select class="utf_chosen_select_single" >
-					  <option label="Select Time">Select Time</option>
-					  <option>Lunch</option>
-					  <option>Dinner</option>
-					</select>
-				</div>
-			</div>
-          </div>
-          <a href="listing_booking.html" class="utf_progress_button button fullwidth_block margin-top-5">Request Booking</a>
-		  <button class="like-button add_to_wishlist"><span class="like-icon"></span> Add to Wishlist</button>
-          <div class="clearfix"></div>
-        </div>
         <div class="utf_box_widget margin-top-35">
           <h3><i class="sl sl-icon-phone"></i> Contact Info</h3>
           <div class="utf_hosted_by_user_title"> <a href="#" class="utf_hosted_by_avatar_listing"><img src="images/dashboard-avatar.jpg" alt=""></a>
@@ -492,14 +250,11 @@
           </ul>
         </div>
         <div class="utf_box_widget margin-top-35">
-          <h3><i class="sl sl-icon-folder-alt"></i> Categories</h3>
+          <h3><i class="sl sl-icon-folder-alt"></i> {{ __('text.categories') }}</h3>
           <ul class="utf_listing_detail_sidebar">
-            <li><i class="fa fa-angle-double-right"></i> <a href="#">Travel</a></li>
-            <li><i class="fa fa-angle-double-right"></i> <a href="#">Nightlife</a></li>
-            <li><i class="fa fa-angle-double-right"></i> <a href="#">Fitness</a></li>
-            <li><i class="fa fa-angle-double-right"></i> <a href="#">Real Estate</a></li>
-            <li><i class="fa fa-angle-double-right"></i> <a href="#">Restaurant</a></li>
-            <li><i class="fa fa-angle-double-right"></i> <a href="#">Dance Floor</a></li>
+              @foreach ($categories as $category)
+                <li><i class="fa fa-angle-double-right"></i> <a href="{{ route('categories.show', ['category' => $category]) }}">{{ $category['name_' . app()->getLocale()] }}</a></li>
+              @endforeach
           </ul>
         </div>
         <div class="utf_box_widget opening-hours margin-top-35">
@@ -776,12 +531,12 @@
 <script src="{{ asset('js/tooltips.min.js') }}"></script>
 <script src="{{ asset('js/color_switcher.js') }}"></script>
 <script src="{{ asset('js/jquery_custom.js') }}"></script>
-<script src="{{ asset('js/infobox.min.js') }}"></script>
 <script src="{{ asset('js/markerclusterer.js') }}"></script>
-<script src="{{ asset('js/maps.js') }}"></script>
 <script src="{{ asset('js/quantityButtons.js') }}"></script>
 <script src="{{ asset('js/moment.min.js') }}"></script>
 <script src="{{ asset('js/daterangepicker.js') }}"></script>
+<script src="{{ asset('js/leaflet.js') }}"></script>
+<script src="{{ asset('js/show_venue.js') }}"></script>
 <script>
 $(function() {
 	$('#date-picker').daterangepicker({

@@ -4,6 +4,7 @@
     <link href="{{ asset('css/stylesheet.css') }}" rel="stylesheet">
     <link href="{{ asset('css/mmenu.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/leaflet.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -29,8 +30,11 @@
 @endif
     <!-- Wrapper -->
     <div id="main_wrapper">
-        <form action="{{ route('venues.store') }}" enctype="multipart/form-data" method="POST">
+        <form action="{{ route('venues.store') }}" id="add_venue_form" enctype="multipart/form-data" method="POST">
             @csrf
+            <input type="hidden" name="lat" value="" id="lat" />
+            <input type="hidden" name="lng" value="" id="lng" />
+            <input type="hidden" name="category_id" value="{{ $category->id }}" />
             <div class="container margin-bottom-75">
                 <div class="row">
                     <div class="col-lg-12">
@@ -38,20 +42,6 @@
                             <div class="add_utf_listing_section margin-top-45">
                                 <div class="utf_add_listing_part_headline_part">
                                     <h3><i class="sl sl-icon-tag"></i>{{ __('text.category_title') }}</h3>
-                                </div>
-                                <div class="row with-forms">
-                                    <div class="col-md-6">
-                                        <h5>{{ __('text.category') }}</h5>
-                                        <div class="intro-search-field utf-chosen-cat-single">
-                                            <select class="selectpicker default" name="category_id"
-                                                data-selected-text-format="count" data-size="7"
-                                                title="{{ __('text.category') }}">
-                                                @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}">{{ $category->category_bg_name }}
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="row with-forms">
                                     <div class="col-md-6">
@@ -70,12 +60,13 @@
                                     <div class="row with-forms">
                                         <div class="col-md-6">
                                             <h5>{{ __('text.city') }}</h5>
-                                            <div class="intro-search-field utf-chosen-cat-single">
+                                            <div class="intro-search-field utf-chosen-cat-single" id="city_id_div">
                                                 <select class="selectpicker default" name="city_id"
                                                     data-selected-text-format="count" data-size="7"
-                                                    title="{{ __('text.city') }}">
+                                                    title="{{ __('text.city') }}"
+                                                    id="city_id">
                                                     @foreach ($cities as $city)
-                                                        <option value="{{ $city->id }}" >{{ $city->name }}</option>
+                                                        <option value="{{ $city->id }}" data-lat="{{ $city->lat }}" data-lng="{{ $city->lng }}">{{ $city['name_'. app()->getLocale()] }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -85,10 +76,9 @@
                                             <input type="text" class="input-text" name="address" id="address"
                                                 placeholder="{{ __('text.address') }}" value="">
                                         </div>
-                                        <div id="utf_listing_location" class="col-md-12 utf_listing_section">
-                                            <div id="utf_single_listing_map_block">
-                                                <div id="utf_single_listingmap" data-map-icon="im im-icon-Hamburger"></div>
-                                                <a href="#" id="utf_street_view_btn">Street View</a>
+                                        <div id="utf_listing_location" class="col-md-12 utf_listing_section map">
+                                            <div id="map" style="height: 500px;">
+
                                             </div>
                                         </div>
                                     </div>
@@ -120,11 +110,11 @@
                                 <div class="row with-forms">
                                     <div class="col-md-6">
                                         <h5>{{ __('text.phone') }}</h5>
-                                        <input type="text" name="phone" placeholder="{{ __('text.phone') }}">
+                                        <input type="text" name="phone" id="phone" placeholder="{{ __('text.phone') }}">
                                     </div>
                                     <div class="col-md-6">
                                         <h5>Email</h5>
-                                        <input type="text" name="email" placeholder="Email">
+                                        <input type="text" name="email" id="email" placeholder="Email">
                                     </div>
                                     <div class="col-md-6">
                                         <h5>Website</h5>
@@ -139,8 +129,13 @@
                                         <input type="text" name="instagram" placeholder="Instagram">
                                     </div>
                                     <div class="col-md-12">
-                                        <h5>{{ __('text.content') }}</h5>
-                                        <textarea name="content" cols="40" rows="3" id="content"
+                                        <h5>{{ __('text.description_bg') }}</h5>
+                                        <textarea name="content_bg" cols="40" rows="3" id="content_bg"
+                                            placeholder="{{ __('text.content') }}..." spellcheck="true"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5>{{ __('text.description_en') }}</h5>
+                                        <textarea name="content_en" cols="40" rows="3" id="content_en"
                                             placeholder="{{ __('text.content') }}..." spellcheck="true"></textarea>
                                     </div>
                                 </div>
@@ -152,29 +147,21 @@
                                 </div>
                                 <div class="checkboxes in-row amenities_checkbox">
                                     <ul>
-                                        @foreach ($booleanFeatures as $feature)
+                                        @foreach ($features as $feature)
                                             <li>
                                                 <input id="{{ $feature->code }}" value="{{ $feature->id }}" type="checkbox" name="features_bool[]">
-                                                <label for="{{ $feature->code }}">{{ $feature->name }}</label>
+                                                <label for="{{ $feature->code }}">{{ $feature['name_' . app()->getLocale()] }}</label>
                                             </li>
                                         @endforeach
 
                                     </ul>
 
                                 </div>
-                                <div class="row with-forms">
-                                    @foreach ($textFeatures as $feature)
-                                        <div class="col-md-6">
-                                            <h5>{{ $feature->name }}</h5>
-                                            <input type="text" name="features_text[]" value="" placeholder="{{ $feature->name }}">
-                                        </div>
-                                    @endforeach
-                                </div>
                             </div>
 
                             <div class="add_utf_listing_section margin-top-45">
                                 <div class="utf_add_listing_part_headline_part">
-                                    <h3><i class="sl sl-icon-clock"></i> Opening Hours</h3>
+                                    <h3><i class="sl sl-icon-clock"></i> {{ __('text.opening_hours') }} </h3>
                                 </div>
                                 <div class="switcher-content">
                                     <div class="row utf_opening_day utf_js_demo_hours">
@@ -358,8 +345,9 @@
     <script src="{{ asset('js/tooltips.min.js') }}"></script>
     <script src="{{ asset('js/color_switcher.js') }}"></script>
     <script src="{{ asset('js/jquery_custom.js') }}"></script>
-    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
     <script src="{{ asset('js/markerclusterer.js') }}"></script>
+    <script src="{{ asset('js/leaflet.js') }}"></script>
+    <script src="{{ asset('js/create_venue.js') }}"></script>
 
     <script>
         $(".utf_opening_day.utf_js_demo_hours .utf_chosen_select").each(function() {

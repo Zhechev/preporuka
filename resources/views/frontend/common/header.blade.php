@@ -3,7 +3,7 @@
             <div id="header">
               <div class="container">
                 <!div class="utf_left_side">
-                  <div id="logo"> <a href="{% url 'home' %}"><img src="{% static 'core/images/logo.png' %}" alt=""></a> </div>
+                  <div id="logo"> <a href="{{ route('home') }}"><img src="{{ asset('images/logo.png') }}" alt=""></a> </div>
                   <div class="nav_responsive"> <i class="fa fa-reorder menu-trigger"></i> </div>
                   <!--nav id="navigation" class="style_one">
                     <ul id="responsive">
@@ -97,9 +97,19 @@
                   <div class="clearfix"></div>
                 </div -->
                 <div class="utf_right_side">
-                  <div class="header_widget">
-                      <a href="{{ route('venues.create') }}" class="button border with-icon"><i class="sl sl-icon-user"></i>Добави обект</a></li>
-                    @auth
+                    <div class="header_widget">
+                      <nav id="navigation" class="style_one">
+                        <ul id="responsive">
+                            <li><a href="#"><i class="sl sl-icon-user"></i>{{ __('text.add_object') }}</a>
+                                <ul>
+                                    @foreach ($categories as $category)
+                                        <li><a href="{{ route('venues.create', ['category' => $category]) }}">{{ $category['category_name_' . app()->getLocale()] }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        </ul>
+                      </nav>
+                      @auth
                       <a href="{% url 'redirect-user-profile' %}" class="button border with-icon"><i class="sl sl-icon-user"></i> Профил</a>
                       <a href="{{ route('logout') }}" class="button border with-icon" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="sl sl-icon-user"></i> Излез</a>
                       <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -107,20 +117,24 @@
                     </form>
                     @endauth
                     @guest
-                        <a href="{{ route('login') }}" class="button border sign-in"><i class="fa fa-sign-in"></i> Вход</a>
-                        <a href="{{ route('register') }}" class="button border with-icon"><i class="sl sl-icon-user"></i> Регистрирай се</a>
+                        <a href="{{ route('login') }}" class="button border sign-in"><i class="fa fa-sign-in"></i>{{ __('text.login') }}</a>
+                        <a href="{{ route('register') }}" class="button border with-icon"><i class="sl sl-icon-user"></i>{{ __('text.registration') }}</a>
                     @endguest
-
-                    <!--{% if user.is_authenticated %}-->
-                    {{-- <!--<p>Welcome {{ user.username }} !!!</p>--> --}}
-                    <!--<p><a href="{% url 'account_logout' %}">Излез</a>-->
-                    <!--{% else %}-->
-                    <!--<p><a href="{% url 'account_signup' %}">Регистрирай се</a></p>-->
-                    <!--<p><a href="{% url 'account_login' %}">Влез</a></p>-->
-                    <!--{% endif %}-->
-
+                      {{-- <!--{% if user.is_authenticated %}-->
+                      <!--<p>Welcome {{ user.username }} !!!</p>-->
+                      <!--<p><a href="{% url 'account_logout' %}">Излез</a>-->
+                      <!--{% else %}-->
+                      <!--<p><a href="{% url 'account_signup' %}">Регистрирай се</a></p>-->
+                      <!--<p><a href="{% url 'account_login' %}">Влез</a></p>-->
+                      <!--{% endif %}--> --}}
+                        <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            {{ strtoupper(app()->getLocale()) }}
+                        </a>
+                            @foreach(config('app.languages') as $langLocale => $langName)
+                                <a class="dropdown-item" href="{{ route('lang', $langLocale) }}">{{ strtoupper($langLocale) }} ({{ $langName }})</a>
+                            @endforeach
+                    </div>
                   </div>
-                </div>
 
         <!--        <div id="dialog_signin_part" class="zoom-anim-dialog mfp-hide">-->
         <!--          <div class="small_dialog_header">-->

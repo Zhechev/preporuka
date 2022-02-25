@@ -15,10 +15,10 @@ class CreateFeaturesTable extends Migration
     {
         Schema::create('features', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->string('code');
             $table->string('category_id');
+            $table->string('code');
+            $table->string('name_bg');
+            $table->string('name_en');
             $table->timestamps();
         });
     }

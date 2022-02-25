@@ -135,7 +135,7 @@
                       <div class="utf_star_rating_section" data-rating="">
                         <div class="utf_counter_star_rating">({{ $venue->rating }})</div>
                       </div>
-                      <p>{{ $venue->content }}</p>
+                      <p>{{ $venue['content_' . app()->getLocale()] }}</p>
                     </div>
                   </div>
                   </a>
@@ -203,10 +203,10 @@
             <button class="button fullwidth_block margin-top-5">Update</button>
           </div>
           <div class="utf_box_widget margin-top-35 margin-bottom-75">
-            <h3><i class="sl sl-icon-folder-alt"></i> Категории</h3>
+            <h3><i class="sl sl-icon-folder-alt"></i> {{ __('text.categories') }}</h3>
             <ul class="utf_listing_detail_sidebar">
 			  @foreach ($categories as $category)
-			  	<li><i class="fa fa-angle-double-right"></i> <a href="{{ route('categories.show', ['category' => $category]) }}">{{ $category->category_bg_name }}</a></li>
+			  	<li><i class="fa fa-angle-double-right"></i> <a href="{{ route('categories.show', ['category' => $category]) }}">{{ $category['name_' . app()->getLocale()] }}</a></li>
 			  @endforeach
             </ul>
           </div>

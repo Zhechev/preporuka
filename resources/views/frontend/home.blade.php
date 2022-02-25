@@ -54,7 +54,7 @@
                 @foreach ($categories as $category)
                   <li> <a href="{{ route('categories.show', ['category' => $category]) }}">
                       <div class="utf_box"> <i class="{{ $category->icon }}" aria-hidden="true"></i>
-                        <p>{{ $category->category_bg_name }}</p>
+                        <p>{{ $category['category_name_' . app()->getLocale()] }}</p>
                       </div>
                       </a>
                   </li>
@@ -78,7 +78,7 @@
         <div class="container_categories_box margin-top-5 margin-bottom-30">
             @foreach ($categories as $category)
             <a href="{{ route('categories.show', ['category' => $category]) }}" class="utf_category_small_box_part"> <i class="{{ $category->icon }}"></i>
-                <h4>{{ $category->category_bg_name }}</h4>
+                <h4>{{ $category['category_name_' . app()->getLocale()] }}</h4>
                 <span>10</span>
               </a>
             @endforeach

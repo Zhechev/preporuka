@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEnNamesToCategoriesTable extends Migration
+class AddLatToVenuesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddEnNamesToCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('en_name');
-            $table->string('category_en_name');
+        Schema::table('venues', function (Blueprint $table) {
+            $table->string('lat')->default('null');
         });
     }
 
@@ -26,9 +25,8 @@ class AddEnNamesToCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('en_name');
-            $table->dropColumn('category_en_name');
+        Schema::table('venues', function (Blueprint $table) {
+            $table->dropColumn('lat');
         });
     }
 }

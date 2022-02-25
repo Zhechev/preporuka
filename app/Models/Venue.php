@@ -9,7 +9,7 @@ class Venue extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'city_id', 'category_id', 'title', 'address', 'phone', 'email', 'website', 'facebook', 'instagram', 'content', 'cover_image'];
+    protected $fillable = ['user_id', 'city_id', 'category_id', 'title', 'address', 'phone', 'email', 'website', 'facebook', 'instagram', 'content_bg', 'content_en', 'cover_image', 'lat', 'lng'];
 
     public function user()
     {
@@ -34,5 +34,10 @@ class Venue extends Model
     public function images()
     {
         return $this->hasMany(VenueImage::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

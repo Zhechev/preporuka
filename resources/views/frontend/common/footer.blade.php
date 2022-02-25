@@ -80,4 +80,7 @@
     </div>
     <div id="bottom_backto_top"><a href="#"></a></div>
   </div>
+
+  <script src="{{ asset('js/tools.js') }}"></script>
+  <script src="/lang-{{ app()->getLocale() }}.js"></script>
   @yield('scripts')
